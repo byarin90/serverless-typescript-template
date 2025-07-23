@@ -2,12 +2,15 @@ import { config } from 'dotenv'
 
 config()
 
-
 const {
     AWS_REGION = '',
     ENVIRONMENT = '',
     DYNAMO_DB_URI = '',
     AUTH0_API_IDENTIFIER = '',
+    AUTH0_DOMAIN = '',
+    AUTH0_CLIENT_ID = '',
+    AUTH0_CLIENT_SECRET = '',
+    LOCAL_JWT_SECRET = '',
     LOGGER_DISABLE_CONSOLE_INTERCEPT = false,
     KEYS_CHECK_PERIOD_IN_SECONDS = 120,
     AWS_DEFAULT_REGION = 'eu-west-1',
@@ -17,6 +20,10 @@ const {
 } = process.env
 
 export {
+    AUTH0_DOMAIN,
+    AUTH0_CLIENT_ID,
+    AUTH0_CLIENT_SECRET,
+    LOCAL_JWT_SECRET,
     AWS_REGION,
     ENVIRONMENT,
     DYNAMO_DB_URI,

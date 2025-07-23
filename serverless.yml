@@ -28,8 +28,18 @@ provider:
     lambda: true
     apiGateway: true
   environment:
-    AUTH0_TENET_DOMAIN: 'https://yarin-bukai.eu.auth0.com/'
-    AUTH0_API_IDENTIFIER: 'https://vxztk1yx12.execute-api.eu-central-1.amazonaws.com'
+    AUTH0_DOMAIN: ${env:AUTH0_DOMAIN, 'https://yarin-bukai.eu.auth0.com/'}
+    AUTH0_API_IDENTIFIER: ${env:AUTH0_API_IDENTIFIER, 'https://vxztk1yx12.execute-api.eu-central-1.amazonaws.com'}
+    PRODUCT_TABLE_NAME: ${env:PRODUCT_TABLE_NAME, 'productTable'}
+
+httpApi:
+  authorizers:
+    auth0:
+      type: jwt
+      identitySource: "$request.header.Authorization"
+      issuerUrl: ${env:AUTH0_DOMAIN, 'https://yarin-bukai.eu.auth0.com/'}
+      audience:
+        - ${env:AUTH0_API_IDENTIFIER, 'https://vxztk1yx12.execute-api.eu-central-1.amazonaws.com'}
 
   # you can add statements to the Lambda function's IAM Role here
   # iamRoleStatements:
@@ -84,30 +94,50 @@ functions:
       - httpApi:
           path: /product
           method: post
+          authorizer:
+            name: auth0
+            scopes:
+              - write:products
   getProduct:
     handler: src/handlers.getProduct
     events:
       - httpApi:
           path: /product/{id}
           method: get
+          authorizer:
+            name: auth0
+            scopes:
+              - read:products
   updateProduct:
     handler: src/handlers.updateProduct
     events:
       - httpApi:
           path: /product/{id}
           method: put
+          authorizer:
+            name: auth0
+            scopes:
+              - write:products
   deleteProduct:
     handler: src/handlers.deleteProduct
     events:
       - httpApi:
           path: /product/{id}
           method: delete
+          authorizer:
+            name: auth0
+            scopes:
+              - delete:products
   getProducts:
     handler: src/handlers.getProducts
     events:
       - httpApi:
           path: /products
           method: get
+          authorizer:
+            name: auth0
+            scopes:
+              - read:products
 plugins:
   - serverless-offline
   - serverless-iam-roles-per-function
