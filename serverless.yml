@@ -31,6 +31,11 @@ provider:
     AUTH0_DOMAIN: ${env:AUTH0_DOMAIN, 'https://yarin-bukai.eu.auth0.com/'}
     AUTH0_API_IDENTIFIER: ${env:AUTH0_API_IDENTIFIER, 'https://vxztk1yx12.execute-api.eu-central-1.amazonaws.com'}
     PRODUCT_TABLE_NAME: ${env:PRODUCT_TABLE_NAME, 'productTable'}
+    JOB_QUEUE_NAME: ${env:JOB_QUEUE_NAME, 'jobQueue'}
+    AWS_USE_SQS_LOCAL: ${env:AWS_USE_SQS_LOCAL, false}
+    SQS_LOCAL_ENDPOINT: ${env:SQS_LOCAL_ENDPOINT, 'http://localhost:9324'}
+    SQS_DEV_SUBSCRIBE_ENDPOINT: ${env:SQS_DEV_SUBSCRIBE_ENDPOINT, 'http://localhost:5555'}
+    SQS_RECEIVE_WAIT_TIME_SECONDS: ${env:SQS_RECEIVE_WAIT_TIME_SECONDS, 20}
 
 httpApi:
   authorizers:
@@ -138,10 +143,30 @@ functions:
             name: auth0
             scopes:
               - read:products
+  enqueueJob:
+    handler: src/handlers.enqueueJob
+    events:
+      - httpApi:
+          path: /jobs
+          method: post
+  processJob:
+    handler: src/handlers.processJob
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [JobQueue, Arn]
+          batchSize: 5
+          maximumBatchingWindow: 30
 plugins:
   - serverless-offline
+  - serverless-offline-sqs
   - serverless-iam-roles-per-function
   - serverless-plugin-common-excludes
+
+custom:
+  serverless-offline-sqs:
+    endpoint: ${env:SQS_LOCAL_ENDPOINT, 'http://localhost:9324'}
+    region: ${env:AWS_DEFAULT_REGION, 'eu-west-1'}
 
 resources:
   Resources:
@@ -160,3 +185,7 @@ resources:
             KeyType: HASH
           - AttributeName: SK
             KeyType: RANGE
+    JobQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${env:JOB_QUEUE_NAME, 'jobQueue'}

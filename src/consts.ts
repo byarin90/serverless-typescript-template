@@ -15,8 +15,10 @@ const {
     KEYS_CHECK_PERIOD_IN_SECONDS = 120,
     AWS_DEFAULT_REGION = 'eu-west-1',
     AWS_USE_SQS_LOCAL = false,
+    SQS_LOCAL_ENDPOINT = 'http://localhost:9324',
     SQS_RECEIVE_WAIT_TIME_SECONDS = 20,
     SQS_DEV_SUBSCRIBE_ENDPOINT = 'http://localhost:5555',
+    JOB_QUEUE_NAME = 'jobQueue',
 } = process.env
 
 export {
@@ -32,6 +34,8 @@ export {
     KEYS_CHECK_PERIOD_IN_SECONDS,
     AWS_DEFAULT_REGION,
     AWS_USE_SQS_LOCAL,
+    SQS_LOCAL_ENDPOINT,
     SQS_RECEIVE_WAIT_TIME_SECONDS,
     SQS_DEV_SUBSCRIBE_ENDPOINT,
+    JOB_QUEUE_NAME,
 }

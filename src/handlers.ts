@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent } from "aws-lambda";
 import { v4 as uuidv4 } from 'uuid';
 import Joi from 'joi';
 import createDynamoClient from "./lib/dynamoDB/create-dynamo-client";
@@ -6,6 +6,8 @@ import { logger } from "./lib/logger";
 import sendResponse from "./lib/serverless/send-response";
 import { StandardError, transformError } from "./lib/serverless/error-handling";
 import getRequestFromEvent from "./lib/serverless/get-request";
+import sqs from "./utils/sqs";
+import { JOB_QUEUE_NAME } from "./consts";
 
 const tableName = process.env.PRODUCT_TABLE_NAME || "productTable";
 
@@ -166,6 +168,19 @@ export const getProducts = async (event: APIGatewayProxyEvent): Promise<unknown>
       message: e.message,
     })
 
+  }
+};
+
+export const enqueueJob = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const { body } = getRequestFromEvent(event);
+  await sqs.publishMessages(JOB_QUEUE_NAME, [body]);
+  return sendResponse(202, { status: 'queued' });
+};
+
+export const processJob = async (event: SQSEvent): Promise<void> => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    logger.info('Processing job', { payload });
   }
 };
 

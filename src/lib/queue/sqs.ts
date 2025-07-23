@@ -17,6 +17,7 @@ import {
   AWS_DEFAULT_REGION,
   AWS_USE_SQS_LOCAL,
   ENVIRONMENT,
+  SQS_LOCAL_ENDPOINT,
   SQS_RECEIVE_WAIT_TIME_SECONDS,
 } from '../../consts';
 import { logger } from '../logger';
@@ -32,7 +33,7 @@ export default class SQS {
 
     this.client = new SQSClient({
       region: AWS_DEFAULT_REGION,
-      endpoint: AWS_USE_SQS_LOCAL ? 'http://localhost:9323' : undefined,
+      endpoint: AWS_USE_SQS_LOCAL ? SQS_LOCAL_ENDPOINT : undefined,
     });
 
     this.devClient = ENVIRONMENT === 'development' && devSubscribeEndpoint
