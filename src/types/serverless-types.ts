@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Joi from 'joi'
+import { APIGatewayProxyResult } from 'aws-lambda'
 
 interface TransformedError {
   statusCode: number;
@@ -29,7 +30,7 @@ interface ParsedRequestObject {
 }
 
 type GetRequestFromEvent = (event: Record<string, any>) => ParsedRequestObject
-type SendResponse = (statusCode?: number, body?: Record<any, any>, headers?: Record<any, any>) => Promise<unknown>
+type SendResponse = (statusCode?: number, body?: Record<any, any>, headers?: Record<any, any>) => Promise<APIGatewayProxyResult>
 
 export {
   TransformError,

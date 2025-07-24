@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/async": "^3.2.24",
     "@types/aws-lambda": "^8.10.143",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.1.0",
     "@types/qs": "^6.9.15",
     "pino-pretty": "^11.2.2",
@@ -24,6 +25,8 @@
     "serverless": "^4.1.19",
     "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-offline": "^14.0.0",
+    "serverless-offline-local-authorizers-plugin": "^1.2.0",
+    "serverless-offline-sqs": "^8.0.0",
     "serverless-plugin-common-excludes": "^4.0.0",
     "typescript": "^5.5.4"
   },
@@ -31,16 +34,19 @@
     "@aws-sdk/client-dynamodb": "^3.624.0",
     "@aws-sdk/client-sqs": "^3.624.0",
     "@aws-sdk/lib-dynamodb": "^3.624.0",
+    "@serverless/utils": "^6.15.0",
     "@types/uuid": "^10.0.0",
     "async": "^3.2.5",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1670.0",
+    "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
     "node-cache": "^5.1.2",
     "pino": "^9.3.2",
     "qs": "^6.13.0",
-    "uuid": "^10.0.0",
-    "yup": "^1.4.0"
+    "uuid": "^10.0.0"
   }
 }

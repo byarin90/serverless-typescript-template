@@ -8,3 +8,7 @@ services:
       - /Users/yarinbukai/Documents/YB/development/aws/docker/dynamoDb:/data
     ports:
       - "8002:8000"
+  elasticmq:
+    image: softwaremill/elasticmq
+    ports:
+      - "9324:9324"
